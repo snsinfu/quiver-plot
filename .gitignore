@@ -1,0 +1,7 @@
+_*
+.*
+!.gitignore
+
+*.a
+*.o
+*.dSYM

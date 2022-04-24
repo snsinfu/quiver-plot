@@ -69,7 +69,7 @@ section below for full details.
 A spec file describes the style and data of arrows to plot in the JSON format.
 The quiver program accepts the following keys:
 
-```json
+```js
 {
     "rendering": {
         "pixels_per_length": /* pixel density of the output image */,

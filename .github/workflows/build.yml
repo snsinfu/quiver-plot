@@ -1,0 +1,25 @@
+name: build
+
+on: push
+
+jobs:
+  build:
+    name: Test build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: cmake build instruction should work
+        run: |
+          mkdir _build
+          cd _build
+          cmake ..
+          make -j2 
+          ./quiver -h
+
+      - name: quiver should accept example specs
+        run: |
+          for spec in examples/*.json; do
+            _build/quiver "${spec}"
+            test -f "${spec%.json}.png"
+          done

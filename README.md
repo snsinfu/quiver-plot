@@ -118,10 +118,10 @@ All keys are optional.
 | Key                 | Example                         | Description |
 |---------------------|---------------------------------|-------------|
 | background_color    | `[1, 1, 1]`<br>`[0, 0, 0, 0]`   | RGB(A) color of the background. Default is transparent. |
-| arrow_color         | `[0, 0, 1]`<br>`[0, 0, 0, 0.5]` | Default RGB(A) color of arrows. |
+| arrow_color         | `[0, 0, 1]`<br>`[0, 0, 0, 0.5]` | Default RGB(A) color of arrows. Default is black. |
 | shaft_width         | `0.01`                          | Default width of arrows. |
-| stem_to_shaft_ratio | `3.5`                           | Relative width of the arrowhead. |
-| head_aspect_ratio   | `1.4`                           | Aspect ratio of the arrowhead. |
+| stem_to_shaft_ratio | `3.5`                           | Relative width of the arrowhead. Default is 3. |
+| head_aspect_ratio   | `1.4`                           | Aspect ratio of the arrowhead. Default is 1.618. |
 
 See [Arrow shape](#arrow-shape) section below for detailed description of the
 geometry of arrow.
@@ -153,10 +153,9 @@ The shape of an arrow is controlled by four independent parameters: `length`,
 - `shaft_width` specifies how fat the arrow looks. The `w` key of each arrow
   overrides this parameter.
 - `stem_to_shaft_ratio` specifies the relative width of the arrowhead. Must
-  be 1 or larger. Arrows usually look good with this parameter being 3-5.
+  be 1 or larger. Arrows usually look good with this parameter set to 3-5.
 - Setting `head_aspect_ratio` to a small value makes the arrowhead pointy.
-  The default value of 1.4 produces the right angle at the pointy end. The
-  `a` key of each arrow overrides this parameter.
+  The `a` key of each arrow overrides this parameter.
 
 If you plot arrows with varying shaft widths, you may want to scale
 `head_aspect_ratio` linearly or with the square root of `shaft_width`,

@@ -13,7 +13,7 @@ constexpr int        default_image_size          = 1000;
 constexpr color_spec default_background_color    = {1, 1, 1, 0};
 constexpr color_spec default_arrow_color         = {0, 0, 0, 1};
 constexpr double     default_stem_to_shaft_ratio = 3;
-constexpr double     default_head_aspect_ratio   = 1.4;
+constexpr double     default_head_aspect_ratio   = 1.618;
 
 
 class quiver_plot

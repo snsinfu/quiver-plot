@@ -1,14 +1,15 @@
 # Quiver plot tool
 
-**quiver** is a small command-line tool to plot many arrows with varying
-positions, lengths, widths and colors. The plot is specified by a JSON file
+**quiver** is a little command-line tool to plot many arrows with varying
+positions, lengths, shapes and colors. The plot is specified by a JSON file
 and saved to a PNG image.
 
-![arrows](doc/sample_3.png)
+![Example image showing vortices of rainbow arrows](doc/sample_3.png)
 
 - [Build](#build)
 - [Usage](#usage)
 - [Spec file](#spec-file)
+- [Arrow shape](#arrow-shape)
 - [License](#license)
 
 
@@ -40,7 +41,7 @@ spec.json  spec.png
 
 The quiver specification is a JSON file. Below is a minimum example that
 produces red, upward arrow and black, downward arrow. See [Spec file](#spec-file)
-section below for full details.
+section below for full details. [More examples](./examples).
 
 ```json
 {
@@ -106,7 +107,7 @@ All keys are optional.
 
 | Key               | Example      | Description |
 |-------------------|--------------|-------------|
-| pixels_per_length | `100`        | Pixel density of the output image in the unit distance in the data coordinate. Higher value produces larger output image. |
+| pixels_per_length | `100`        | Pixel density of the output image measured in pixel per unit coordinate length. Higher value produces larger output image. |
 | x_range           | `[-1, 1]`    | Range of x coordinate of the rendered region. |
 | y_range           | `[-1, 1]`    | Range of y coordinate of the rendered region. |
 | output            | `"plot.png"` | Output image filename. Must be PNG. Default is the same name of the spec file but with ".png" extension. |
@@ -117,7 +118,7 @@ All keys are optional.
 
 | Key                 | Example                         | Description |
 |---------------------|---------------------------------|-------------|
-| background_color    | `[1, 1, 1]`<br>`[0, 0, 0, 0]`   | RGB(A) color of the background. Default is transparent. |
+| background_color    | `[1, 1, 1]`<br>`[0, 0, 0, 0.5]` | RGB(A) color of the background. Default is transparent. |
 | arrow_color         | `[0, 0, 1]`<br>`[0, 0, 0, 0.5]` | Default RGB(A) color of arrows. Default is black. |
 | shaft_width         | `0.01`                          | Default width of arrows. |
 | stem_to_shaft_ratio | `3.5`                           | Relative width of the arrowhead. Default is 3. |
@@ -138,10 +139,10 @@ geometry of arrow.
 | dy  | `-0.5`                          | The y component of the arrow vector. |
 | w   | `0.05`                          | Width of the arrow. Overrides `shaft_width`. |
 | a   | `1.9`                           | Aspect ratio of the arrowhead. Overrides `head_aspect_ratio`. |
-| c   | `[1, 0, 0]`<br>`[0, 0, 0, 0.5`  | RGB(A) color of the arrow. Overrides `arrow_color`. |
+| c   | `[1, 0, 0]`<br>`[0, 0, 0, 0.5]` | RGB(A) color of the arrow. Overrides `arrow_color`. |
 
 
-### Arrow shape
+## Arrow shape
 
 ![Geometry of an arrow](doc/arrow_geometry.png)
 
@@ -157,7 +158,11 @@ The shape of an arrow is controlled by four independent parameters: `length`,
 - Setting `head_aspect_ratio` to a small value makes the arrowhead pointy.
   The `a` key of each arrow overrides this parameter.
 
-If you plot arrows with varying shaft widths, you may want to scale
+If `length` is so small that the shaft and the arrowhead cannot be drawn in
+the specified shape, **quiver** omits the shaft and only draws a downscaled
+arrowhead. The aspect ratio of the head is unchanged.
+
+Note: If you plot arrows with varying shaft widths, you may want to scale
 `head_aspect_ratio` linearly or with the square root of `shaft_width`,
 thus contracting the arrowhead as arrow thickens. These seem to produce
 aesthetically better-looking results than that without scaling.

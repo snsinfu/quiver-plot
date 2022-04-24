@@ -35,7 +35,7 @@ struct jsoncons::json_type_traits<Json, range_spec>
 };
 
 
-// color_spec as a JSON array of three numbers.
+// color_spec as a JSON array of three (RGB) or four (RGBA) numbers.
 template<class Json>
 struct jsoncons::json_type_traits<Json, color_spec>
 {
@@ -44,16 +44,20 @@ struct jsoncons::json_type_traits<Json, color_spec>
 
     static bool is(const Json& j) noexcept
     {
-        return j.is_array() && j.size() == 3;
+        return j.is_array() && (j.size() == 3 || j.size() == 4);
     }
 
     static value_type as(const Json& j)
     {
-        return {
+        value_type color = {
             j.at(0).template as<double>(),
             j.at(1).template as<double>(),
             j.at(2).template as<double>(),
         };
+        if (j.size() == 4) {
+            color.alpha = j.at(3).template as<double>();
+        }
+        return color;
     }
 
     static Json to_json(value_type const& value, allocator_type alloc = {})
@@ -62,6 +66,9 @@ struct jsoncons::json_type_traits<Json, color_spec>
         j.push_back(value.red);
         j.push_back(value.green);
         j.push_back(value.blue);
+        if (value.alpha != 1) {
+            j.push_back(value.alpha);
+        }
         return j;
     }
 };

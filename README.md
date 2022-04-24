@@ -115,13 +115,13 @@ All keys are optional.
 
 All keys are optional.
 
-| Key                 | Example       | Description |
-|---------------------|---------------|-------------|
-| background_color    | `[1, 1, 1]`   | RGB color of the background. Default is transparent. |
-| arrow_color         | `[0, 0, 0.1]` | Default RGB color of arrows. |
-| shaft_width         | `0.01`        | Default width of arrows. |
-| stem_to_shaft_ratio | `3.5`         | Relative width of the arrowhead. |
-| head_aspect_ratio   | `1.4`         | Aspect ratio of the arrowhead. |
+| Key                 | Example                         | Description |
+|---------------------|---------------------------------|-------------|
+| background_color    | `[1, 1, 1]`<br>`[0, 0, 0, 0]`   | RGB(A) color of the background. Default is transparent. |
+| arrow_color         | `[0, 0, 1]`<br>`[0, 0, 0, 0.5]` | Default RGB(A) color of arrows. |
+| shaft_width         | `0.01`                          | Default width of arrows. |
+| stem_to_shaft_ratio | `3.5`                           | Relative width of the arrowhead. |
+| head_aspect_ratio   | `1.4`                           | Aspect ratio of the arrowhead. |
 
 See [Arrow shape](#arrow-shape) section below for detailed description of the
 geometry of arrow.
@@ -130,15 +130,15 @@ geometry of arrow.
 
 `x`, `y`, `dx` and `dy` are required. Other keys are optional.
 
-| Key | Example       | Description |
-|-----|---------------|-------------|
-| x   | `0.1`         | The x coordinate of the point which the arrow starts from. |
-| y   | `2.3`         | The y coordinate of the point which the arrow starts from. |
-| dx  | `0.4`         | The x component of the arrow vector. |
-| dy  | `-0.5`        | The y component of the arrow vector. |
-| w   | `0.05`        | `shaft_width` for the arrow. |
-| a   | `1.9`         | `head_aspect_ratio` for the arrow. |
-| c   | `[1, 0, 0]`   | `arrow_color` for the arrow. |
+| Key | Example                         | Description |
+|-----|---------------------------------|-------------|
+| x   | `0.1`                           | The x coordinate of the point which the arrow starts from. |
+| y   | `2.3`                           | The y coordinate of the point which the arrow starts from. |
+| dx  | `0.4`                           | The x component of the arrow vector. |
+| dy  | `-0.5`                          | The y component of the arrow vector. |
+| w   | `0.05`                          | Width of the arrow. Overrides `shaft_width`. |
+| a   | `1.9`                           | Aspect ratio of the arrowhead. Overrides `head_aspect_ratio`. |
+| c   | `[1, 0, 0]`<br>`[0, 0, 0, 0.5`  | RGB(A) color of the arrow. Overrides `arrow_color`. |
 
 
 ### Arrow shape

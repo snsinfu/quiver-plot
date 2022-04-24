@@ -16,3 +16,10 @@ jobs:
           cmake ..
           make -j2 
           ./quiver -h
+
+      - name: quiver should accept example specs
+        run: |
+          for spec in examples/*.json; do
+            _build/quiver "${spec}"
+            test -f "${spec%.json}.png"
+          done

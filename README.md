@@ -165,4 +165,4 @@ aesthetically better-looking results than that without scaling.
 
 ## License
 
-MIT License
+MIT License. See also [the vendored libraries](./vendor/).

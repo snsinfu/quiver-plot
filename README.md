@@ -68,7 +68,7 @@ section below for full details. [More examples](./examples).
 ## Spec file
 
 A spec file describes the style and data of arrows to plot in the JSON format.
-The quiver program accepts the following keys:
+The quiver program accepts the following keys. Detailed descriptions follow.
 
 ```js
 {

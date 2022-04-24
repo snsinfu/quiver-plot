@@ -1,5 +1,7 @@
 # Quiver plot tool
 
+[![Build status][ci-badge]][ci-page]
+
 **quiver** is a little command-line tool to plot many arrows with varying
 positions, lengths, shapes and colors. The plot is specified by a JSON file
 and saved to a PNG image.
@@ -11,6 +13,9 @@ and saved to a PNG image.
 - [Spec file](#spec-file)
 - [Arrow shape](#arrow-shape)
 - [License](#license)
+
+[ci-page]: https://github.com/snsinfu/quiver-plot/actions/workflows/build.yml
+[ci-badge]: https://github.com/snsinfu/quiver-plot/actions/workflows/build.yml/badge.svg
 
 
 ## Build

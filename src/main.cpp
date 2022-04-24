@@ -28,7 +28,15 @@ int
 main(int argc, char** argv)
 {
     try {
-        auto const options = parse_options(argc, argv);
+        program_options options;
+
+        try {
+            options = parse_options(argc, argv);
+        } catch (std::exception const& err) {
+            std::cerr << "error: " << err.what() << '\n';
+            show_usage();
+            return 1;
+        }
 
         if (options.help) {
             show_usage();
@@ -98,7 +106,7 @@ parse_options(int argc, char** argv)
 
     // Require exactly one positional argument.
     if (argc != 1) {
-        throw std::runtime_error{"exactly one spec file must be specified as a command-line argument"};
+        throw std::runtime_error{"spec file is not given"};
     }
     options.spec = argv[0];
 

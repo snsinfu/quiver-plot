@@ -5,3 +5,7 @@ _*
 *.a
 *.o
 *.dSYM
+
+/examples/*.png
+/examples/sample_2.json
+/examples/sample_3.json

@@ -1,0 +1,18 @@
+{
+    "rendering": {
+        "pixels_per_length": 100,
+        "x_range": [-2, 2],
+        "y_range": [-1.6, 1.6]
+    },
+
+    "style": {
+        "background_color": [1, 1, 1],
+        "arrow_color": [0.1, 0.1, 0.2],
+        "shaft_width": 0.3
+    },
+
+    "arrows": [
+        {"x":  -1, "y": 0, "dx": 0, "dy":  1.5, "c": [0.8, 0, 0]},
+        {"x":   1, "y": 0, "dx": 0, "dy": -1.5}
+    ]
+}

@@ -1,75 +1,118 @@
-#include <cmath>
-#include <random>
+#include <exception>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <optional>
+#include <stdexcept>
+#include <string>
 
-#include <blend2d.h>
+#include <getopt.hpp>
+
+#include "plot.hpp"
+#include "spec.hpp"
 
 
-int main()
+struct program_options
 {
-    double const pixels_per_length = 200;
-    double const canvas_width = 30;
-    double const canvas_height = 30;
+    bool                       help = false;
+    std::optional<std::string> output;
+    std::string                spec;
+};
 
-    auto const image_width = static_cast<int>(canvas_width * pixels_per_length);
-    auto const image_height = static_cast<int>(canvas_height * pixels_per_length);
+static void            show_usage();
+static program_options parse_options(int argc, char** argv);
+static quiver_spec     load_quiver_spec(std::string const& filename);
 
-    BLImage image{image_width, image_height, BL_FORMAT_PRGB32};
-    BLContext context{image};
 
-    context.setCompOp(BL_COMP_OP_SRC_COPY);
-    context.fillAll();
+int
+main(int argc, char** argv)
+{
+    try {
+        auto const options = parse_options(argc, argv);
 
-    BLMatrix2D meta_matrix;
-    meta_matrix.reset();
-    meta_matrix.translate(canvas_width / 2, canvas_width / 2);
-    meta_matrix.postScale(pixels_per_length);
-    context.setMatrix(meta_matrix);
-    context.userToMeta();
+        if (options.help) {
+            show_usage();
+            return 0;
+        }
 
-    std::mt19937_64 random;
+        auto spec = load_quiver_spec(options.spec);
 
-    for (long i = 0; i < 100'000; i++) {
-        BLPath arrow;
-        arrow.moveTo(0, 0.5);
-        arrow.lineTo(5, 0.5);
-        arrow.lineTo(5, 2);
-        arrow.lineTo(7, 0);
-        arrow.lineTo(5, -2);
-        arrow.lineTo(5, -0.5);
-        arrow.lineTo(0, -0.5);
-        arrow.close();
+        if (options.output) {
+            spec.rendering.output = *options.output;
+        }
 
-        std::uniform_real_distribution<double> x_coord{-canvas_width / 2, canvas_width / 2};
-        std::uniform_real_distribution<double> y_coord{-canvas_height / 2, canvas_height / 2};
-        auto const x = x_coord(random);
-        auto const y = y_coord(random);
-        auto const dx = y;
-        auto const dy = -x;
-        auto const angle = std::atan2(dy, dx);
+        if (!spec.rendering.output) {
+            spec.rendering.output = std::filesystem::path{options.spec}.replace_extension(".png");
+        }
 
-        BLMatrix2D model_matrix;
-        model_matrix.reset();
-        model_matrix.scale(0.01);
-        model_matrix.rotate(angle);
-        model_matrix.postTranslate(x, y);
-        arrow.transform(model_matrix);
-
-        auto const s = 0.5 + x / canvas_width;
-        auto const t = 0.5 + y / canvas_height;
-        auto const red = unsigned((0.5 + 0.5 * s) * 255);
-        auto const green = unsigned((1.0 - 0.5 * t) * 255);
-        auto const blue = unsigned((0.5 + 0.5 * t) * 255);
-
-        context.setCompOp(BL_COMP_OP_SRC_OVER);
-        context.setFillStyle(BLRgba32(red, green, blue));
-        context.fillPath(arrow);
+        produce_quiver_plot(spec);
+    } catch (std::exception const& err) {
+        std::cerr << "error: " << err.what() << '\n';
+        return 1;
     }
 
-    context.end();
-
-    BLImageCodec codec;
-    codec.findByName("PNG");
-    image.writeToFile("_output.png", codec);
-
     return 0;
+}
+
+
+void
+show_usage()
+{
+    std::string const usage =
+        "usage: quiver [-h] [-o output] spec\n"
+        "\n"
+        "  spec       JSON file specifying the quiver plot to produce\n"
+        "\n"
+        "options:\n"
+        "  -o output  Output PNG image file name\n"
+        "  -h         Print this help message and exit\n"
+        "\n";
+    std::cerr << usage;
+}
+
+
+program_options
+parse_options(int argc, char** argv)
+{
+    program_options options;
+    cxx::getopt getopt;
+
+    for (int ch; (ch = getopt(argc, argv, "ho:")) != -1; ) {
+        switch (ch) {
+        case 'h':
+            // Stop parsing options if help is requested.
+            options.help = true;
+            return options;
+
+        case 'o':
+            options.output = getopt.optarg;
+            break;
+
+        default:
+            throw std::runtime_error{"unrecognized command-line option"};
+        }
+    }
+
+    argc -= getopt.optind;
+    argv += getopt.optind;
+
+    // Require exactly one positional argument.
+    if (argc != 1) {
+        throw std::runtime_error{"exactly one spec file must be specified as a command-line argument"};
+    }
+    options.spec = argv[0];
+
+    return options;
+}
+
+
+quiver_spec
+load_quiver_spec(std::string const& filename)
+{
+    std::ifstream file{filename};
+    std::string json;
+    if (!std::getline(file, json, '\0')) {
+        throw std::runtime_error{"failed to load spec file"};
+    }
+    return parse_quiver_spec(json);
 }
